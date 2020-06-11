@@ -26,6 +26,18 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use('/api/sauces', sauceRoutes);
+app.use('/api/auth', userRoutes);
+
+
+
+app.use(bodyParser.json());
+
+
+module.exports = app;
+
 /*
 
 app.use('/api/', (req, res, next) => {
@@ -109,8 +121,6 @@ dislikes: { type: Number, required: true },
 
 
 
-app.use(bodyParser.json());
-
 
 /*
 app.post('/api/sauces', (req, res) => {
@@ -122,10 +132,7 @@ app.post('/api/sauces', (req, res) => {
 
 */
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/api/sauces', sauceRoutes);
-app.use('/api/auth', userRoutes);
 
 
 /*
@@ -158,5 +165,5 @@ app.use((req, res) => {
 });
 */
 
-module.exports = app;
+
 

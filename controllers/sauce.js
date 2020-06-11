@@ -15,6 +15,25 @@ exports.createSauce = (req, res, next) => {
 };
 
 
+
+exports.likeSauce = (req, res, next) => {
+    Sauce.findOne({ _id: req.params.id })
+
+
+        .then(sauce => {
+            Sauce.update({ _id: req.params.id }, { $set: [{ "likes.1": { _id: req.params.userId } }] })
+                .then(() => res.status(200).json({ message: 'like ajouté!' }))
+                .catch(error => res.status(402).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
+}
+
+
+
+
+
+
+
 exports.modifySauce = (req, res, next) => {
     const sauceObject = req.file ?
         {
