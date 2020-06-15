@@ -14,24 +14,81 @@ exports.createSauce = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
+/*
+
+exports.likeSauce = (req, res, next) => {
+    const sauceLikes = JSON.parse(req.body.like);
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            if (req.body.like == 1) {
+                Sauce.Update({ _id: req.params.id }, { $push: [{ usersLiked: req.params.id }] })
+                    .then(() => res.status(201).json({ message: 'like ajouté!' }))
+                    .catch(error => res.status(400).json({ error }));
+
+            };
+
+        });
+
+
+};
+
+*/
+
+
+
 
 
 exports.likeSauce = (req, res, next) => {
+    const sauceLikes = JSON.parse(req.body.like);
+
+    console.log(sauceLikes)
+
     Sauce.findOne({ _id: req.params.id })
-
-
         .then(sauce => {
-            Sauce.update({ _id: req.params.id }, { $set: [{ "likes.1": { _id: req.params.userId } }] })
-                .then(() => res.status(200).json({ message: 'like ajouté!' }))
-                .catch(error => res.status(402).json({ error }));
+
+            const userLikeArray = sauce.usersLiked;
+            const lengthLike = userLikeArray.length;
+            console.log(sauce.userId);
+            console.log(lengthLike);
+
+            if (req.body.like === 1) {
+                const userId = sauce.userId;
+                //const userDislikeArray = sauce.usersLiked;
+                Sauce.update({ _id: req.params.id }, { $push: [{ usersLiked: req.params.id }] })
+                Sauce.update({ _id: req.params.id }, { $inc: { likes: 1 } })
+
+
+                    .then(() => res.status(201).json({ message: 'like ajouté!' }))
+                    .catch(error => res.status(400).json({ error }));
+            }
+
+            else if (req.body.like === -1) {
+                const userId = sauce.userId;
+                //const userDislikeArray = sauce.usersLiked;
+                Sauce.update({ _id: req.params.id }, { $push: [{ usersDisliked: req.params.id }] })
+                    //Sauce.findOneAndUpdate({ _id: req.params.id }, { $set: { disLike: userDislikeArray.length } })
+                    //Sauce.dislikes = Sauce.usersDisliked.length
+                    //sauce.save()
+                    .then(() => res.status(201).json({ message: 'dislike ajouté!' }))
+                    .catch(error => res.status(400).json({ error }));
+            }
+
+            else {
+                //Sauce.update({ _id: req.params.id }, { $pull: { usersLiked: [req.body.userId] } })
+                Sauce.update({ _id: req.params.id }, { $pull: { usersDisliked: [req.body.userId], usersLiked: [req.body.userId] } })
+
+                    .then(() => res.status(201).json({ message: 'like ou dislike supprimé' }))
+                    .catch(error => res.status(400).json({ error }));
+            }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(501).json({ error }));
 }
 
 
 
 
 
+//$set: [{ "likes.1": { _id: req.params.userId } }] }
 
 
 exports.modifySauce = (req, res, next) => {
@@ -65,6 +122,7 @@ exports.getOneSauce = (req, res, next) => {
     }).then(
         (sauce) => {
             res.status(200).json(sauce);
+            console.log(sauce);
         }
     ).catch(
         (error) => {
