@@ -22,8 +22,7 @@ exports.createSauce = (req, res, next) => {
 
 //Gestion des likes
 exports.likeSauce = (req, res, next) => {
-    const sauceLikes = JSON.parse(req.body.like);
-    
+       
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             if (req.body.like == 1) {   //l'utilisateur like la sauce
