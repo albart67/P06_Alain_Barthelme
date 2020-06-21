@@ -38,7 +38,7 @@ exports.likeSauce = (req, res, next) => {
                     .catch(error => res.status(400).json({ error }));
             }
 
-            else { //l'utilisateur annule le like ou
+            else { //l'utilisateur annule le like ou dislike
                 const userDislikeArray = sauce.usersDisliked;
                 const userLikeArray = sauce.usersLiked;
                 
