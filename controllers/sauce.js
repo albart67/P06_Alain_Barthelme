@@ -23,14 +23,9 @@ exports.createSauce = (req, res, next) => {
 //Gestion des likes
 exports.likeSauce = (req, res, next) => {
     const sauceLikes = JSON.parse(req.body.like);
-    //console.log(sauceLikes);
+    
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
-            const userLikeArray = sauce.usersLiked;
-            const lengthLike = userLikeArray.length;
-            //console.log(sauce.userId);
-            //console.log(lengthLike);
-
             if (req.body.like == 1) {   //l'utilisateur like la sauce
                 const userId = sauce.userId;
                  Sauce.update({ _id: req.params.id }, { $push: { usersLiked: req.body.userId }, $inc: { likes: 1 } })
@@ -48,10 +43,7 @@ exports.likeSauce = (req, res, next) => {
             else { //l'utilisateur annule le like ou
                 const userDislikeArray = sauce.usersDisliked;
                 const userLikeArray = sauce.usersLiked;
-                //console.log(userDislikeArray);
-                //console.log(userLikeArray);
-                //console.log(userLikeArray.includes(req.body.userId));
-
+                
                 if (userLikeArray.includes(req.body.userId)) {
                     Sauce.update({ _id: req.params.id }, { $pull: { usersLiked: req.body.userId }, $inc: { likes: -1 } })
                         .then(() => res.status(201).json({ message: 'like supprimé' }))
